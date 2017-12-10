@@ -53,7 +53,7 @@ int main(int argc, char **argv)
                 return 1;
             }
             if (weight != 0) {
-                v_adj.emplace_back(weight, city);
+                v_adj.emplace_back(city, weight);
             }
         }
     }
