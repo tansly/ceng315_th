@@ -8,7 +8,7 @@ namespace Graph {
 
 using Graph = typename std::vector<std::vector<std::pair<unsigned long, std::size_t>>>;
 
-void print_graph(Graph graph);
+void print_graph(const Graph &graph);
 
 };
 
