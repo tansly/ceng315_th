@@ -1,7 +1,9 @@
 #include "graph.h"
 
+#include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <utility>
 #include <vector>
 
@@ -60,7 +62,39 @@ int main(int argc, char **argv)
     /* Done with the input file */
     infile.close();
 
-    Graph::print_graph(graph);
+    auto w1_sp = Graph::shortest_path(graph, warehouses.first);
+    auto w2_sp = Graph::shortest_path(graph, warehouses.second);
+    std::vector<std::pair<size_t, unsigned long>> w1_to_dests;
+    std::vector<std::pair<size_t, unsigned long>> w2_to_dests;
+    for (const auto &dest : destinations) {
+        w1_to_dests.emplace_back(dest, w1_sp[dest]);
+    }
+    for (const auto &dest : destinations) {
+        w2_to_dests.emplace_back(dest, w2_sp[dest]);
+    }
+
+    auto cmp_less = [&](const std::pair<size_t, unsigned long> &lhs,
+            const std::pair<size_t, unsigned long> &rhs) {
+        return lhs.second - w2_to_dests[lhs.first].second <
+            rhs.second - w2_to_dests[rhs.first].second;
+    };
+    std::sort(w1_to_dests.begin(), w1_to_dests.end(), cmp_less);
+    std::map<size_t, size_t> assignments;
+    unsigned long total_length = 0;
+    for (size_t i = 0; i < n_destinations/2; ++i) {
+        assignments[w1_to_dests[i].first] = warehouses.first;
+        total_length += w1_to_dests[i].second;
+    }
+    for (size_t i = n_destinations/2; i < n_destinations; ++i) {
+        assignments[w1_to_dests[i].first] = warehouses.second;
+        total_length += w2_to_dests[w1_to_dests[i].first].second;
+    }
+
+    /* Output */
+    std::cout << total_length << '\n';
+    for (const auto &ass : assignments) {
+        std::cout << ass.first << " " << ass.second << '\n';
+    }
 
     return 0;
 }
