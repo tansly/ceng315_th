@@ -1,4 +1,4 @@
-#include "priority_queue.hpp"
+#include "priority_queue.h"
 
 #include <fstream>
 #include <iostream>
