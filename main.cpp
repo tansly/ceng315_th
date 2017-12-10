@@ -1,24 +1,12 @@
 #include "priority_queue.h"
+#include "graph.h"
 
 #include <fstream>
 #include <iostream>
-#include <list>
 #include <utility>
 #include <vector>
 
 using std::size_t;
-using Graph = typename std::vector<std::vector<std::pair<unsigned long, size_t>>>;
-
-void print_graph(Graph graph)
-{
-    size_t n_cities = graph.size();
-    for (size_t i = 0; i < n_cities; ++i) {
-        for (const auto &edge : graph[i]) {
-            std::cout << '(' << i << ", " << edge.second << ", " <<
-                edge.first << ")\n";
-        }
-    }
-}
 
 int main(int argc, char **argv)
 {
@@ -57,7 +45,7 @@ int main(int argc, char **argv)
     }
 
     /* Read the graph */
-    Graph graph(n_cities);
+    Graph::Graph graph(n_cities);
     for (auto &v_adj : graph) {
         for (size_t city = 0; city < n_cities; ++city) {
             unsigned long weight;
@@ -73,7 +61,7 @@ int main(int argc, char **argv)
     /* Done with the input file */
     infile.close();
 
-    print_graph(graph);
+    Graph::print_graph(graph);
 
     return 0;
 }
