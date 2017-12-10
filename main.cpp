@@ -7,7 +7,7 @@
 #include <vector>
 
 using std::size_t;
-using Graph = typename std::vector<std::list<std::pair<unsigned long, size_t>>>;
+using Graph = typename std::vector<std::vector<std::pair<unsigned long, size_t>>>;
 
 void print_graph(Graph graph)
 {
