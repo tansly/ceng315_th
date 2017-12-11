@@ -20,14 +20,14 @@ void print_graph(const Graph &graph)
     }
 }
 
-std::vector<unsigned long> shortest_path(const Graph &graph, size_t source)
+std::vector<long> shortest_path(const Graph &graph, size_t source)
 {
     size_t n_cities = graph.size();
-    std::vector<unsigned long> dist(n_cities, std::numeric_limits<unsigned long>::max());
+    std::vector<long> dist(n_cities, std::numeric_limits<long>::max());
     std::vector<bool> visited(n_cities, false);
     dist[source] = 0;
 
-    using VertexDist = std::pair<size_t, unsigned long>;
+    using VertexDist = std::pair<size_t, long>;
     auto compare = [](VertexDist lhs, VertexDist rhs) {
         return lhs.second > rhs.second;
     };
@@ -35,7 +35,7 @@ std::vector<unsigned long> shortest_path(const Graph &graph, size_t source)
     queue.emplace(source, 0);
     for (size_t i = 0; i < n_cities; i++) {
         if (i != source) {
-            queue.emplace(i, std::numeric_limits<unsigned long>::max());
+            queue.emplace(i, std::numeric_limits<long>::max());
         }
     }
 

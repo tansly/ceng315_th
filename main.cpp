@@ -50,7 +50,7 @@ int main(int argc, char **argv)
     Graph::Graph graph(n_cities);
     for (auto &v_adj : graph) {
         for (size_t city = 0; city < n_cities; ++city) {
-            unsigned long weight;
+            long weight;
             if (!(infile >> weight)) {
                 std::cerr << "error reading weights\n";
                 return 1;
@@ -65,30 +65,20 @@ int main(int argc, char **argv)
 
     auto w1_sp = Graph::shortest_path(graph, warehouses.first);
     auto w2_sp = Graph::shortest_path(graph, warehouses.second);
-    std::vector<std::tuple<size_t, unsigned long, long>> w1_to_dests;
-    std::vector<std::tuple<size_t, unsigned long, long>> w2_to_dests;
-    for (size_t i = 0; i < destinations.size(); ++i) {
-        w2_to_dests.emplace_back(destinations[i], w2_sp[destinations[i]], 0);
-    }
-    for (size_t i = 0; i < destinations.size(); ++i) {
-        w1_to_dests.emplace_back(destinations[i], w1_sp[destinations[i]],
-                w1_sp[destinations[i]] - std::get<1>(w2_to_dests[i]));
-    }
 
-    auto cmp_less = [&](const std::tuple<size_t, unsigned long, long> &lhs,
-            const std::tuple<size_t, unsigned long, long> &rhs) {
-        return std::get<2>(lhs) < std::get<2>(rhs);
+    auto cmp = [&](size_t lhs, size_t rhs) {
+        return w1_sp[lhs] - w2_sp[lhs] < w1_sp[rhs] - w2_sp[rhs];
     };
-    std::sort(w1_to_dests.begin(), w1_to_dests.end(), cmp_less);
+    std::sort(destinations.begin(), destinations.end(), cmp);
     std::map<size_t, size_t> assignments;
-    unsigned long total_length = 0;
+    long total_length = 0;
     for (size_t i = 0; i < n_destinations/2; ++i) {
-        assignments[std::get<0>(w1_to_dests[i])] = warehouses.first;
-        total_length += std::get<1>(w1_to_dests[i]);
+        assignments[destinations[i]] = warehouses.first;
+        total_length += w1_sp[destinations[i]];
     }
     for (size_t i = n_destinations/2; i < n_destinations; ++i) {
-        assignments[std::get<0>(w1_to_dests[i])] = warehouses.second;
-        total_length += std::get<1>(w2_to_dests[i]); // XXX: WRONG
+        assignments[destinations[i]] = warehouses.second;
+        total_length += w2_sp[destinations[i]];
     }
 
     /* Output */
