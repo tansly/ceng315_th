@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS=-std=c++14 -Wall -Wextra -g -O2
+CXXFLAGS=-std=c++14 -Wall -Wextra -O2
 
 runTH: main.cpp graph.cpp graph.h
 	$(CXX) $(CXXFLAGS) main.cpp graph.cpp -o runTH
